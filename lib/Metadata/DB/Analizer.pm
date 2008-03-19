@@ -6,10 +6,11 @@ use LEOCHARRE::DEBUG;
 use vars qw($VERSION);
 use base 'Metadata::DB::Base';
 use LEOCHARRE::Class::Accessors 
-   multi => ['search_attributes_selected','_attributes'], single => ['attribute_option_list_limit'];
+   multi => ['search_attributes_selected','_attributes'], 
+   single => ['attribute_option_list_limit'];
 
 no warnings 'redefine';
-$VERSION = sprintf "%d.%02d", q$Revision: 1.2 $ =~ /(\d+)/g;
+$VERSION = sprintf "%d.%02d", q$Revision: 1.3 $ =~ /(\d+)/g;
 
 
 
@@ -83,7 +84,6 @@ sub get_attributes_by_ratio {
 
 sub get_attributes_counts {
    my $self = shift;
-
 
    my $attr ={};
    my $_atts = $self->get_attributes;
@@ -251,12 +251,14 @@ sub _att_uniq_vals {
 
    # unique vals
 
-	my $_sql = sprintf "SELECT DISTINCT %s FROM %s WHERE %s=? LIMIT ?", # this is for heuristics
+   # this is for heuristics
+	my $_sql = sprintf "SELECT DISTINCT %s FROM %s WHERE %s=? LIMIT ?",       
       $self->table_metadata_column_name_value,
       $self->table_metadata_name,
       $self->table_metadata_column_name_key;
 
-   my $s = $self->dbh->prepare_cached( $_sql ) or die( "statement [$_sql], ".$self->dbh->errstr );
+   my $s = $self->dbh->prepare_cached( $_sql )
+      or die( "statement [$_sql], ".$self->dbh->errstr );
    
    $s->execute($att,$limit) or die( $self->dbh->errstr );
    
@@ -291,14 +293,11 @@ sub attribute_all_unique_values {
 
    # unique vals
    my $q = sprintf "SELECT DISTINCT %s FROM %s WHERE %s='%s' $_limit",
-   
-   $self->table_metadata_column_name_value,
-   $self->table_metadata_name,
-   $self->table_metadata_column_name_key,
-   $attribute,
+      $self->table_metadata_column_name_value,
+      $self->table_metadata_name,
+      $self->table_metadata_column_name_key,
+      $attribute,
    ;
-   
-   
    #   debug(" query: $q \n");
    
    my $r = $self->dbh->selectall_arrayref($q);
@@ -634,12 +633,15 @@ For more information of the database layout, please see L<Metadata::DB>
 
 =head1 SEE ALSO
 
+Metadata::DB::Search
+Metadata::DB::Indexer
 Metadata::DB::Search::InterfaceHTML
 Metadata::DB::WUI
 Metadata::DB
+Metadata::Base
 
 =head1 AUTHOR
 
-Leo Charre
+Leo Charre leocharre at cpan dot org
 
 =cut
